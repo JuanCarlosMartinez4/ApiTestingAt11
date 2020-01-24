@@ -1,8 +1,8 @@
-# Created by Juan at 22/01/2020
-Feature: # Board's list
-  # Manages lists of the board
-  Background:
-    Given sets https://api.trello.com/1/lists in postman
+# Created by Juan at 1/23/2020
+Feature: # CRUD label
+  # Manages labelss of board
+    Background:
+    Given sets https://api.trello.com/1/labels in postman
     And Choose OAuth 1.0 authorization type
     And Sets Consumer Key value {costumerKey}
     And Sets Consumer Secret value {consumerSecret}
@@ -23,70 +23,102 @@ Feature: # Board's list
     And Do Send
     And Sends POST request to /
       | name            | idBoard          |
-      | newListNameTest | {boardObject.id} |
+      | newLabelNameTest | {boardObject.id} |
     And Should return status code 200 OK
-    And Should return a body response as 'listObject'
+    And Should return a body response as 'labelObject'
 
-  Scenario: # Create a new list on a board
+  Scenario: # Create a new label on a board
     Given Sets POST request to /
-      | name        | idBoard          |
-      | newListName | {boardObject.id} |
+      | name         | color  | idBoard          |
+      | newLabelName | yellow | {boardObject.id} |
     And Do Send
     When Sends POST request to /
-      | name        | idBoard          |
-      | newListName | {boardObject.id} |
+      | name         | color  | idBoard          |
+      | newLabelName | yellow | {boardObject.id} |
     Then Should return status code 200 OK
     And Should return a body response
     """
     {
-      "id": "{idListValue}",
-      "name": "newListName",
+      "id": "{idLabelValue}",
+      "name": "newLabelName",
       "closed": false,
       "idBoard": "{boardObject.id}",
       "pos": 4096,
       "limits": {}
     }
     """
+    And Sends DELETE request to /:id
+      | id            |
+      | {idLabelValue} |
+    And Should return status code 200 OK
+    """
+    {
+      "limits": {}
+    }
+    """
+    And Sets GET request to /:id
+      | id                       |
+      | {idLabelValue} |
+    And Do Send
+    And Should return
+      | The requested resource was not found. |
 
-  Scenario: # Gets information about a list
+  Scenario: # Gets information about a label by ID
     Given Sets GET request to /:id
-      | id              |
-      | {listObject.id} |
+      | id               |
+      | {labelObject.id} |
     And Do Send
     When Sends GET request to /:id
-      | id              |
-      | {listObject.id} |
+      | id               |
+      | {labelObject.id} |
     Then Should return status code 200 OK
     And Should return a body response
     """
     {
-      "id": "{listObject.id}",
-      "name": "newListNameTest",
+      "id": "{labelObject.id}",
+      "name": "newLabelNameTest",
       "closed": false,
       "idBoard": "{objectBoard.id}",
       "pos": 4096
     }
     """
 
-  Scenario: # Updates the properties of a list by id
+  Scenario: # Updates a label by ID
     Given Sets PUT request to /:id
-      | id              | name               |
-      | {listObject.id} | newListTestUpdated |
+      | id               | name                | color |
+      | {labelObject.id} | newLabelTestUpdated | green |
     And Do Send
     When Sends PUT request to /:id
-      | id              | name               |
-      | {listObject.id} | newListTestUpdated |
+      | id               | name                | color |
+      | {labelObject.id} | newLabelTestUpdated | green |
     Then Should return status code 200 OK
     And Should return a body response
     """
     {
-      "id": "{listObject.id}",
-      "name": "newListUpdated",
+      "id": "{labelObject.id}",
+      "name": "newLabelTestUpdated",
       "closed": false,
       "idBoard": "{boardObject.id}",
-      "pos": 4096
+      "pos": {}
     }
     """
+
+  Scenario: # Deletes a label by ID
+    When Sends DELETE request to /:id
+      | id              |
+      | {labelObject.id} |
+    Then Should return status code 200 OK
+    """
+    {
+      "limits": {}
+    }
+    """
+    And Sets GET request to /:id
+      | id              |
+      | {labelObject.id} |
+    And Do Send
+    And Should return
+      | The requested resource was not found. |
     And Sends DELETE request to https://api.trello.com/1/boards/:id
       | id               |
       | {boardObject.id} |
