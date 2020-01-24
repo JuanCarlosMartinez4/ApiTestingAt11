@@ -2,12 +2,8 @@
 Feature: # CRUD of boards in Trello
   # Manages boards in Trello
   Background:
-    Given sets https://api.trello.com/1/boards in postman
-    And Choose OAuth 1.0 authorization type
-    And Sets Consumer Key value {costumerKey}
-    And Sets Consumer Secret value {consumerSecret}
-    And Sets Access Token value {accessToken}
-    And Sets Token Secret {tokenSecret}
+    Given sets https://api.trello.com/1/boards
+    And set authentication values
     And Sets POST request to /
       | name        |
       | boardToTest |
