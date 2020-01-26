@@ -1,15 +1,17 @@
 from behave import given, when, then, step
 
 from codelogic.SchemaValidator import SchemaValidator
-from coderequests.PostBoardRequest import PostBoardRequest
+from codelogic.PostBoardRequest import PostBoardRequest
 
 id_value = ""
 url_value = ""
 name_value = ""
 json_response = ""
+key_value = ""
+token_value = ""
 
 
-@given('Sets POST request to "{url}"')
+@given('Sets URL "{url}"')
 def step_impl(context, url):
     context.postBoard = PostBoardRequest()
     context.validate = SchemaValidator()
@@ -17,7 +19,19 @@ def step_impl(context, url):
     url_value = url
 
 
-@step('sets name "{board_name}"')
+@step('Sets KEY "{key}"')
+def step_impl(context, key):
+    global key_value
+    key_value = key
+
+
+@step('Sets TOKEN "{token}"')
+def step_impl(context, token):
+    global token_value
+    token_value = token
+
+
+@given('Sets name "{board_name}"')
 def step_impl(context, board_name):
     global name_value
     name_value = board_name
@@ -26,8 +40,8 @@ def step_impl(context, board_name):
 @when("Sends POST request")
 def step_impl(context):
     global json_response
-    json_response = context.postBoard.post_board(url_value, name_value)
     global id_value
+    json_response = context.postBoard.post_board(url_value, name_value, key_value, token_value)
     id_value = json_response.json()['id']
 
 
@@ -39,26 +53,14 @@ def step_impl(context, status_code):
     assert True is expected
 
 
-@step('Sets DELETE request to "{delete_url}"')
-def step_impl(context, delete_url):
-    global url_value
-    url_value = delete_url
-
-
 @step("Sends DELETE request")
 def step_impl(context):
-    context.postBoard.delete_board(url_value, id_value)
-
-
-@step('Sets GET request to "{get_url}"')
-def step_impl(context, get_url):
-    global url_value
-    url_value = get_url
+    context.postBoard.delete_board(url_value, id_value, key_value, token_value)
 
 
 @step("Sends GET request")
 def step_impl(context):
-    context.postBoard.get_board(url_value, id_value)
+    context.postBoard.get_board(url_value, id_value, key_value, token_value)
 
 
 @step('Should return "{message}"')
