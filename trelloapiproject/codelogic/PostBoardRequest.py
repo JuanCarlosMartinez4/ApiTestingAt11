@@ -7,30 +7,30 @@ class PostBoardRequest(object):
         self.response = ""
         self.send_request = SendRequest()
 
-    def post_board(self, input_url, input_name):
+    def post_board(self, input_url, input_name, input_key, input_token):
         querystring = {"name": input_name, "defaultLabels": "true", "defaultLists": "true",
                        "keepFromSource": "none",
                        "prefs_permissionLevel": "private", "prefs_voting": "disabled", "prefs_comments": "members",
                        "prefs_invitations": "members", "prefs_selfJoin": "true", "prefs_cardCovers": "true",
                        "prefs_background": "blue", "prefs_cardAging": "regular",
-                       "key": "4178a940f6bdaed61804b6ff90d6d20e",
-                       "token": "e90ca503e4f0357e22543ff44250c74a98640c14d9e62e509b9171b5a4e8ecc6"}
+                       "key": input_key,
+                       "token": input_token}
 
         method_type = "POST"
         self.response = self.send_request.method_request(method_type, input_url, querystring)
         return self.response
 
-    def delete_board(self, input_url, input_id):
+    def delete_board(self, input_url, input_id, input_key, input_token):
         url = input_url + input_id
 
-        querystring = {"key": "4178a940f6bdaed61804b6ff90d6d20e",
-                       "token": "e90ca503e4f0357e22543ff44250c74a98640c14d9e62e509b9171b5a4e8ecc6"}
+        querystring = {"key": input_key,
+                       "token": input_token}
 
         method_type = "DELETE"
         self.response = self.send_request.method_request(method_type, url, querystring)
         return self.response
 
-    def get_board(self, input_url, input_id):
+    def get_board(self, input_url, input_id, input_key, input_token):
         url = input_url + input_id
 
         querystring = {"actions": "all", "boardStars": "none", "cards": "none", "card_pluginData": "false",
@@ -41,8 +41,8 @@ class PostBoardRequest(object):
                        "membersInvited_fields": "all",
                        "pluginData": "false", "organization": "false", "organization_pluginData": "false",
                        "myPrefs": "false",
-                       "tags": "false", "key": "4178a940f6bdaed61804b6ff90d6d20e",
-                       "token": "e90ca503e4f0357e22543ff44250c74a98640c14d9e62e509b9171b5a4e8ecc6"}
+                       "tags": "false", "key": input_key,
+                       "token": input_token}
 
         method_type = "GET"
         self.response = self.send_request.method_request(method_type, url, querystring)
