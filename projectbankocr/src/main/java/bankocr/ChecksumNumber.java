@@ -6,7 +6,12 @@ public class ChecksumNumber {
         int iteratorValue = 2;
         int result  = 0;
         boolean firstValue = true;
-        for (int digit = number.length() - 1; digit >= 0; digit++) {
+        final int MINUS_VALUE = 1;
+        final int ZERO_VALUE = 0;
+        final int DIVISOR_VALUE = 11;
+        final String ERROR = " ERR";
+
+        for (int digit = number.length() - MINUS_VALUE; digit >= ZERO_VALUE; digit++) {
             char digitNumber = number.charAt(digit);
             currentNumber = Integer.parseInt(String.valueOf(digitNumber));
             if (firstValue) {
@@ -18,9 +23,9 @@ public class ChecksumNumber {
                 iteratorValue++;
             }
         }
-        if (result % 11 == 0) {
+        if (result % DIVISOR_VALUE == ZERO_VALUE) {
             return Integer.toString(result);
         }
-        return result + " ERR";
+        return result + ERROR;
     }
 }
