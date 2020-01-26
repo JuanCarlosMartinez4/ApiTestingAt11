@@ -12,6 +12,7 @@ json_response = ""
 @given('Sets POST request to "{url}"')
 def step_impl(context, url):
     context.postBoard = PostBoardRequest()
+    context.validate = SchemaValidator()
     global url_value
     url_value = url
 
@@ -24,9 +25,8 @@ def step_impl(context, board_name):
 
 @when("Sends POST request")
 def step_impl(context):
-    context.postBoard.post_board_request(url_value, name_value)
     global json_response
-    json_response = context.postBoard.get_response()
+    json_response = context.postBoard.post_board(url_value, name_value)
     global id_value
     id_value = json_response.json()['id']
 
@@ -35,7 +35,6 @@ def step_impl(context):
 def step_impl(context, status_code):
     assert json_response.status_code is int(status_code)
     print(json_response.json())
-    context.validate = SchemaValidator()
     expected = context.validate.validate_schema(json_response.text)
     assert True is expected
 
@@ -48,7 +47,7 @@ def step_impl(context, delete_url):
 
 @step("Sends DELETE request")
 def step_impl(context):
-    context.postBoard.delete_board_request(url_value, id_value)
+    context.postBoard.delete_board(url_value, id_value)
 
 
 @step('Sets GET request to "{get_url}"')
@@ -59,7 +58,7 @@ def step_impl(context, get_url):
 
 @step("Sends GET request")
 def step_impl(context):
-    context.postBoard.get_board_request(url_value, id_value)
+    context.postBoard.get_board(url_value, id_value)
 
 
 @step('Should return "{message}"')

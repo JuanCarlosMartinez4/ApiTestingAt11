@@ -1,21 +1,13 @@
-import requests
+from coderequests.SendRequest import SendRequest
 
 
 class PostBoardRequest(object):
 
     def __init__(self):
-        self.my_url = ""
-        self.name = ""
         self.response = ""
-        self.id = ""
+        self.send_request = SendRequest()
 
-    def add_url(self, url1):
-        self.my_url = url1
-
-    def add_name(self, board_name):
-        self.name = board_name
-
-    def post_board_request(self, input_url, input_name):
+    def post_board(self, input_url, input_name):
         querystring = {"name": input_name, "defaultLabels": "true", "defaultLists": "true",
                        "keepFromSource": "none",
                        "prefs_permissionLevel": "private", "prefs_voting": "disabled", "prefs_comments": "members",
@@ -24,23 +16,21 @@ class PostBoardRequest(object):
                        "key": "4178a940f6bdaed61804b6ff90d6d20e",
                        "token": "e90ca503e4f0357e22543ff44250c74a98640c14d9e62e509b9171b5a4e8ecc6"}
 
-        self.response = requests.request("POST", input_url, params=querystring)
-
-    def get_response(self):
+        method_type = "POST"
+        self.response = self.send_request.method_request(method_type, input_url, querystring)
         return self.response
 
-    def set_board_id(self, board_id):
-        self.id = board_id
-
-    def delete_board_request(self, input_url, input_id):
+    def delete_board(self, input_url, input_id):
         url = input_url + input_id
 
         querystring = {"key": "4178a940f6bdaed61804b6ff90d6d20e",
                        "token": "e90ca503e4f0357e22543ff44250c74a98640c14d9e62e509b9171b5a4e8ecc6"}
 
-        self.response = requests.request("DELETE", url, params=querystring)
+        method_type = "DELETE"
+        self.response = self.send_request.method_request(method_type, url, querystring)
+        return self.response
 
-    def get_board_request(self, input_url, input_id):
+    def get_board(self, input_url, input_id):
         url = input_url + input_id
 
         querystring = {"actions": "all", "boardStars": "none", "cards": "none", "card_pluginData": "false",
@@ -54,7 +44,9 @@ class PostBoardRequest(object):
                        "tags": "false", "key": "4178a940f6bdaed61804b6ff90d6d20e",
                        "token": "e90ca503e4f0357e22543ff44250c74a98640c14d9e62e509b9171b5a4e8ecc6"}
 
-        self.response = requests.request("GET", url, params=querystring)
+        method_type = "GET"
+        self.response = self.send_request.method_request(method_type, url, querystring)
+        return self.response
 
     def return_message(self):
         return self.response
